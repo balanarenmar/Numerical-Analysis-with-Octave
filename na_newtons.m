@@ -4,7 +4,7 @@
   #p0 = 1.5;    ## Initial approximation
   TOL = 1e-5;  ## 0.00001 default tolerance 5 decimal places
   N = 100;      ##N is max iterations
-  points = 100;
+  points = 1000;
 
   pkg load symbolic
   syms sym_x;
@@ -20,41 +20,41 @@
   dy = df(x);
 
   ## PLOTTING
-  plot(x,y,'b','LineWidth', 1);
-  grid on;
-  title('Bisection Method');
-  set(gca,'FontSize',20);
-  y_min = min(y);
-  y_max = max(y);
-  % Calculate the range for both x and y
-  x_range = b - a;
-  y_range = y_max - y_min;
-  % Determine the maximum range for the aspect ratio
-  max_range = max(x_range, y_range);
-  % Calculate the new axis limits
-  x_center = (b + a) / 2;
-  y_center = (y_max + y_min) / 2;
-  x_limit = [x_center - max_range / 2, x_center + max_range / 2];
-  y_limit = [y_center - max_range / 2, y_center + max_range / 2];
-  % Determine the tick locations at intervals of 2
-  x_ticks = floor(x_limit(1)/2)*2 : 2 : ceil(x_limit(2)/2)*2;
-  y_ticks = floor(y_limit(1)/2)*2 : 2 : ceil(y_limit(2)/2)*2;
-  % Set the aspect ratio to 'equal' and specify axis limits and tick locations
-  axis([x_limit, y_limit]);
-  axis equal;
-  hold on;
-  #plot points a and b.
-  plot(a, f(a), 'ro');
-  plot(b, f(b), 'ro');
-  #text(a, f(a), "A","fontsize",20);
-  #text(b, f(b), "B","fontsize",20);
+    plot(x,y,'b','LineWidth', 1);
+    grid on;
+    title('Newton-Raphson Method');
+    set(gca,'FontSize',20);
+    y_min = min(y);
+    y_max = max(y);
+    % Calculate the range for both x and y
+    x_range = b - a;
+    y_range = y_max - y_min;
+    % Determine the maximum range for the aspect ratio
+    max_range = max(x_range, y_range);
+    % Calculate the new axis limits
+    x_center = (b + a) / 2;
+    y_center = (y_max + y_min) / 2;
+    x_limit = [x_center - max_range / 2, x_center + max_range / 2];
+    y_limit = [y_center - max_range / 2, y_center + max_range / 2];
+    % Determine the tick locations at intervals of 2
+    x_ticks = floor(x_limit(1)/2)*2 : 2 : ceil(x_limit(2)/2)*2;
+    y_ticks = floor(y_limit(1)/2)*2 : 2 : ceil(y_limit(2)/2)*2;
+    % Set the aspect ratio to 'equal' and specify axis limits and tick locations
+    axis([x_limit, y_limit]);
+    axis equal;
+    hold on;
+    #plot points a and b.
+    plot(a, f(a), 'ro');
+    plot(b, f(b), 'ro');
+    #text(a, f(a), "A","fontsize",20);
+    #text(b, f(b), "B","fontsize",20);
   ## END -- PLOTTING
 
   #store computed values
   newtons_result = zeros(0,5);
-  column_labels = {'n', 'p', 'f(p)', 'p+1', "f(p)+1"};
-  #initial approximation
+  column_labels = {'n', 'p', 'f(p)', 'p+1', "f(p+1)"};
 
+  #initial approximation
   p0 = 1.5;
   p = p0;
 
@@ -66,8 +66,7 @@
       fprintf('Iteration %d: p = %.8f\n', i, p);
 
       %STORE data
-      new_row = zeros(1,4);
-      #column_labels = {'n', 'p', 'f(p)', "f(p)+1"};
+      new_row = zeros(1,5);
       new_row(1,1) = i-1;
       new_row(1,2) = p0;
       new_row(1,3) = f(p0);

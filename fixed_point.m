@@ -1,7 +1,7 @@
-  a = -2;
+  a = 0;
   b = 3;
   TOL = 1e-5; ##0.00001 default tolerance 5 decimal places
-  N = 30;     ##N is max iterations
+  N = 100;     ##N is max iterations
   points = 100;
   ##where a, b are endpoints,
   ##TOL is tolerance
@@ -12,7 +12,8 @@
   %output_precision(digit)
 
   #function handle
-  f = @(x) (x.^2)-2;
+  #f = @(x) (x.^2)-2;
+  f = @(x) 3.^(-x);
 
   #x values range from a to b
   x = linspace(a,b,points);
@@ -58,57 +59,50 @@
   label_y = xy(4);  % Adjust as needed for label placement
   text(label_x, label_y, 'x=y', 'FontSize', 24, 'Color', 'cyan');
 
+  #store computed values
+  fixedpoint_result = zeros(0,3);
+  column_labels = {'n', 'p', 'f(p)'};
   #initial guess: midpoint
   midpoint = (a + (b - a) / 2);
   px = midpoint;
-  py = f(px);
+
 
   ## Fixed Point Iteration LOOP
   for i = 1:N
     n_str = num2str(i);
-    p = f(midpoint);
-    fprintf('%3d\t   A:%f\t   B:%f\t   p:%f\n',i,a,b,midpoint);
-    fprintf('eval%d\tf(a):%f\tf(b):%f\tf(p):%f ',i,f(a),f(b),f(midpoint));
+    py = f(px);
+
+    fprintf('%3d\t p:%f\t p:%f\n',i,px,py);
 
     #Store data
-    new_row = zeros(1,7);
+    new_row = zeros(1,3);
     new_row(1,1) = i;
-    new_row(1,2) = a;
-    new_row(1,3) = f(a);
-    new_row(1,4) = b;
-    new_row(1,5) = f(b);
-    new_row(1,6) = px;
-    new_row(1,7) = py;
+    new_row(1,2) = px;
+    new_row(1,3) = py;
     fixedpoint_result = vertcat(fixedpoint_result, new_row);
 
     ##STOPPING CONDITION
-    rel_error = fn_rel_err(py, px);
-    abs_error = fn_abs_err(py, px);
-
+    rel_error = fn_rel_err(px, py);
     if (rel_error < TOL)
+    #if (abs(py-px) < TOL)
       output = py;
-      fprintf('FIXED POINT REACHED\n');
-      plot(midpoint, f(midpoint), 'g*');
-      text(midpoint, f(midpoint), ['p' n_str],"fontsize",15);
+      fprintf('FIXED POINT REACHED at %f\n',py);
+      plot(px, py, 'g*');
+      text(px, py, ['p' n_str],"fontsize",15);
+      fixedpoint_result_cell = [column_labels; num2cell(fixedpoint_result)];
       return;
     endif
     fprintf('\t abs err: %f\trel err: %f\n', abs_error, rel_error);
 
-    if ((f(a).*f(midpoint))>0) #p replaces a; same sign
-      a = midpoint;
-      Fa = f(midpoint);
-      ##solve for a[i], b[i];
-    else
-      b = midpoint;
-      Fb = f(midpoint);
-    endif
-    past_midpoint = midpoint;
-
     ##PLOT the point
-    plot(midpoint, f(midpoint), 'm+');
-    text(midpoint, f(midpoint), ['p' n_str],"fontsize",15);
+    plot(px, py, 'm+');
+    text(px, py, ['p' n_str],"fontsize",15);
+
+    ##UPDATE VALUES
+    px = py;
+
   endfor
 
-  #{
-  as
-  #}
+  fixedpoint_result_cell = [column_labels; num2cell(fixedpoint_result)];
+  error('Method failed after %d iterations, last value: %f',N, py);
+

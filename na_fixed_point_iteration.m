@@ -1,11 +1,9 @@
   a = 0;
   b = 3;
-  TOL = 1e-5; ##0.00001 default tolerance 5 decimal places
-  N = 100;     ##N is max iterations
+  TOL = 1e-5;  ## 0.00001 default tolerance 5 decimal places
+  N = 100;     ## N is max iterations
   points = 100;
-  ##where a, b are endpoints,
-  ##TOL is tolerance
-
+  ## where a, b are endpoints,
 
   ##prepare formatting
   format;

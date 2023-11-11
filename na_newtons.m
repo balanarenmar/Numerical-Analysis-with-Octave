@@ -19,10 +19,6 @@
   y = f(x);
   dy = df(x);
 
-  #x values range from a to b
-  x = linspace(a,b,points);
-  y = f(x);
-
   ## PLOTTING
   plot(x,y,'b','LineWidth', 1);
   grid on;

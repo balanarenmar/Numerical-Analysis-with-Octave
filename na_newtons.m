@@ -78,13 +78,11 @@
       new_row(1,4) = p;
       new_row(1,5) = f(p);
       newtons_result = vertcat(newtons_result, new_row);
-
+      newtons_result_cell = [column_labels; num2cell(newtons_result)];
       % Check for convergence
       rel_error = fn_rel_err(p0, p);
       if (rel_error < TOL)
-      #if abs(p - p0) < TOL
-          fprintf('Converged to solution: p%d = %.8f\n',i ,p);
-          newtons_result_cell = [column_labels; num2cell(newtons_result)];
+          fprintf('Converged to solution: p%d = %.8f\n',i-1, p);
           ## PLOT last tangent line
           pn = newtons_result(i,2);
           tangent_line = df(pn) * (x - pn) + f(pn);
@@ -106,7 +104,6 @@
             j = j-1;
             k = k+1;
           endwhile
-          #{#}
           hold off;
           return;
       endif
@@ -114,5 +111,4 @@
       p0 = p;
   endfor
   hold off;
-  newtons_result_cell = [column_labels; num2cell(newtons_result)];
   error('Method failed after %d iterations, last value: %f',N, p);

@@ -1,7 +1,9 @@
+#function output = fn_bisection_method(a, b, TOL, N)
+function output = na_bisection_method()
   a = -2;
   b = 1.5;
   TOL = 1e-5; ##0.00001 default tolerance 5 decimal places
-  N = 30;
+  N = 50;
   points = 100;
   ##where a, b are endpoints,
   ##TOL is tolerance
@@ -94,10 +96,10 @@
     endif
     fprintf('\t abs err: %f\trel err: %f\n', abs_error, rel_error);
 
+    ##solve for a[i], b[i];
     if ((f(a).*f(midpoint))>0) #p replaces a; same sign
       a = midpoint;
       Fa = f(midpoint);
-      ##solve for a[i], b[i];
     else
       b = midpoint;
       Fb = f(midpoint);
@@ -110,3 +112,5 @@
   endfor
   bisection_result_cell = [column_labels; num2cell(bisection_result)];
   error('Method failed after %d iterations, last value: %f',N, midpoint);
+
+end

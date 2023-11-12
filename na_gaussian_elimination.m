@@ -20,10 +20,6 @@
        0 0 0 0 4;
        ];
 
-
-  En  = A(1, :);  ## row 1
-  col = A(:, 1); ## colon 1
-
   unique_solution = true;
   for i = 1:n-1
     En  = A(i, :);  ## row i
@@ -37,7 +33,7 @@
       return;
     endif
 
-    fprintf('col:%d\tpivot index:%d\n', i, p);
+    ##debug fprintf('col:%d\tpivot index:%d\n', i, p);
     if (p != i) #Swap
         temp_row = A(p, :);  ## temp row
         A(p, :) = A(i, :);
@@ -50,8 +46,6 @@
       A(j, :) = Ej;
     endfor
 
-
-
 endfor
     if (A(n,n) == 0)
       fprintf('No unique solution exists.\n');
@@ -60,7 +54,7 @@ endfor
     endif
 
     ## Backward Substitution
-    x = zeros(1,n)        #Store the answers
+    x = zeros(1,n);        #Store the answers
     x(1, n) = A(n,n+1)./A(n,n);
 
     for i = n-1:-1:1
@@ -68,8 +62,9 @@ endfor
         for j = i+1:n
           summation = summation + (A(i,j) .* x(1, j));
         endfor
-        fprintf('summation:%d\n',summation);
+        ##debug fprintf('summation:%d\n',summation);
         x(1, i) = (A(i,n+1) - summation) ./ A(i,i);
     endfor
 
     fprintf("Procedure Completed Successfully\n");
+    ## X is a row vector containing solutions

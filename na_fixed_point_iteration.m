@@ -2,7 +2,7 @@
   b = 3;
   TOL = 1e-5;  ## 0.00001 default tolerance 5 decimal places
   N = 100;     ## N is max iterations
-  points = 100;
+  points = 10000;
   ## where a, b are endpoints,
 
   ##prepare formatting
@@ -23,7 +23,7 @@
   ## PLOTTING
   plot(x,y) ##TEST plot
   grid on;
-  title('Bisection Method');
+  title('Fixed Point Iteration');
   set(gca,'FontSize',20);
   y_min = min(y);
   y_max = max(y);
@@ -52,10 +52,10 @@
 
   edge = max(max(abs(x_limit)), max(abs(y_limit)));
   xy = linspace(-edge,edge,5);
-  plot(xy, xy, 'c--');
+  plot(xy, xy, 'r--');
   label_x = xy(4);  % Adjust as needed for label placement
   label_y = xy(4);  % Adjust as needed for label placement
-  text(label_x, label_y, 'x=y', 'FontSize', 24, 'Color', 'cyan');
+  text(label_x, label_y, 'x=y', 'FontSize', 20, 'Color', 'r');
 
   #store computed values
   fixedpoint_result = zeros(0,3);
@@ -80,21 +80,23 @@
     fixedpoint_result = vertcat(fixedpoint_result, new_row);
 
     ##STOPPING CONDITION
+    abs_error = fn_abs_err(px, py);
     rel_error = fn_rel_err(px, py);
-    if (rel_error < TOL)
-    #if (abs(py-px) < TOL)
+    if (abs_error < TOL)
       output = py;
       fprintf('FIXED POINT REACHED at %f\n',py);
-      plot(px, py, 'g*');
-      text(px, py, ['p' n_str],"fontsize",15);
+      #plot(px, py, 'k*');
+      scatter(px, py, 30, 'g', 'filled');
+      text(px, py, ['p' n_str],"fontsize",15, 'Color','k', 'FontSize', 20);
       fixedpoint_result_cell = [column_labels; num2cell(fixedpoint_result)];
+      hold off;
       return;
     endif
     fprintf('\t abs err: %f\trel err: %f\n', abs_error, rel_error);
 
     ##PLOT the point
-    plot(px, py, 'm+');
-    text(px, py, ['p' n_str],"fontsize",15);
+    #scatter(px, py, 10, 'b', 'filled');
+    #text(px, py, ['p' n_str],"fontsize",15);
 
     ##UPDATE VALUES
     px = py;
@@ -103,4 +105,5 @@
 
   fixedpoint_result_cell = [column_labels; num2cell(fixedpoint_result)];
   error('Method failed after %d iterations, last value: %f',N, py);
+  hold off;
 

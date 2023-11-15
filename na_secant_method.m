@@ -64,6 +64,8 @@
 
     scatter(p, f(p), 20, 'b', 'filled');
     text(p, f(p), "p2","fontsize",12);
+
+
   ## END -- PLOTTING
 
   for i = 2:N
@@ -91,6 +93,7 @@
         text(p, f(p), ['p' num2str(i)],"fontsize",13);
 
         output = p;
+        hold off;
         return;
     endif
 

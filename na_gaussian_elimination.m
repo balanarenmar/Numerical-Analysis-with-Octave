@@ -1,12 +1,9 @@
-
-  TOL = 1e-5;  ## 0.00001 default tolerance 5 decimal places
-  N = 100;     ## N is max iterations
-  points = 100;
-
   format;
   ## Matrix size
   n = 4;        ## Number of Unknowns & Equations
   m = n;
+
+  ## prompt user to input
 
    A = [1 -1 2 -1 -8;
        2 -2 3 -3, -20;
@@ -47,6 +44,8 @@
     endfor
 
 endfor
+
+A
     if (A(n,n) == 0)
       fprintf('No unique solution exists.\n');
       unique_solution = false;

@@ -88,4 +88,37 @@
 
   ## Step 7
 
+  ## Substitution
+  b = [8;7;14;-7];
+  y = zeros(n,1);        # y stands for value of Ux
+  y(1) = b(1)./L(1,1);
+
+
+  ## Solve for y using Ly = b
+  for i = 2:n
+      summation = 0;
+      for j = 1:i-1
+        summation = summation + (L(i,j) .* y(j));
+      endfor
+      ##debug fprintf('summation:%d\n',summation);
+      y(i) = (b(i) - summation) ./ L(i,i);
+  endfor
+
+
+  ## Solve for x using Ux = y
+
+  x = zeros(n,1);        #Store the answers
+  x(n) = y(n)./U(n,n);
+
+  for i = n-1:-1:1
+      summation = 0;
+      for j = i+1:n
+        summation = summation + (U(i,j) .* x(j));
+      endfor
+
+      x(i) = (y(i) - summation) ./ U(i,i)
+      #fprintf('row:%d y(i)=%d summation=%d U(i,i)=%d\n',i, y(i),summation,U(i,i));
+  endfor
+  fprintf("Procedure Completed Successfully\n");
+
 

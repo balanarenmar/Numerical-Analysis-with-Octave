@@ -1,16 +1,14 @@
-function output = fn_bisection_method(a, b, TOL, N)
-  a = -2;
-  b = 1.5;
-  TOL = 1e-5; ##0.00001 default tolerance 5 decimal places
-  N = 50;
-  points = 100;
+function output = fn_bisection_method(a, b, f, TOL, N)
   ##where a, b are endpoints,
   ##TOL is tolerance
+  ##f
   ##N is max iterations
 
   ##prepare formatting
   format;
   %output_precision(digit)
+
+  points = 10000;
 
   #function handle
   f = @(x) 3*(x + 1).*(x - 0.5).*(x - 1);
@@ -54,8 +52,8 @@ function output = fn_bisection_method(a, b, TOL, N)
   #plot points a and b.
   plot(a, Fa, 'ro');
   plot(b, Fb, 'ro');
-  text(a, Fa, "A","fontsize",20);
-  text(b, Fb, "B","fontsize",20);
+  text(a, Fa, ['A=' num2str(a)],"fontsize",20);
+  text(b, Fb, ['B=' num2str(b)],"fontsize",20);
   ## END -- PLOTTING
 
   #store computed values
@@ -85,15 +83,15 @@ function output = fn_bisection_method(a, b, TOL, N)
     ##STOPPING CONDITION
     rel_error = fn_rel_err(midpoint, past_midpoint);
     abs_error = fn_abs_err(midpoint, past_midpoint);
-
+    fprintf('\t abs err: %f\trel err: %f\n', abs_error, rel_error);
     if (f(midpoint)==0) || (rel_error < TOL)
       output = midpoint;
-      fprintf('ROOT REACHED\n');
+      fprintf('\nROOT REACHED!!\n');
       plot(midpoint, f(midpoint), 'g*');
       text(midpoint, f(midpoint), ['p' n_str],"fontsize",15);
       return;
     endif
-    fprintf('\t abs err: %f\trel err: %f\n', abs_error, rel_error);
+
 
     ##solve for a[i], b[i];
     if ((f(a).*f(midpoint))>0) #p replaces a; same sign
@@ -107,7 +105,7 @@ function output = fn_bisection_method(a, b, TOL, N)
 
     ##PLOT the point
     plot(midpoint, f(midpoint), 'm+');
-    text(midpoint, f(midpoint), ['p' n_str],"fontsize",15);
+    #text(midpoint, f(midpoint), ['p' n_str],"fontsize",15);
   endfor
   bisection_result_cell = [column_labels; num2cell(bisection_result)];
   error('Method failed after %d iterations, last value: %f',N, midpoint);

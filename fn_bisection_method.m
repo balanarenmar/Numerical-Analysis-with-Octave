@@ -61,6 +61,9 @@ function output = fn_bisection_method(a, b, f, TOL, N)
   column_labels = {'n', 'a', 'f(a)', 'b', 'f(b)', 'p', 'f(p)'};
 
   past_midpoint = a;
+
+  fprintf('a, b = intervals, p = compute midpoint');
+
   for i = 1:N
     n_str = num2str(i);
     midpoint = (a + (b - a) / 2);

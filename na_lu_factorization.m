@@ -106,7 +106,6 @@
 
 
   ## Solve for x using Ux = y
-
   x = zeros(n,1);        #Store the answers
   x(n) = y(n)./U(n,n);
 

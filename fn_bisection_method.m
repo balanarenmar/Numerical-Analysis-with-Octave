@@ -11,7 +11,6 @@ function output = fn_bisection_method(a, b, f, TOL, N)
   points = 10000;
 
   #function handle
-  f = @(x) 3*(x + 1).*(x - 0.5).*(x - 1);
 
   #x values range from a to b
   x = linspace(a,b,points);
@@ -61,7 +60,6 @@ function output = fn_bisection_method(a, b, f, TOL, N)
   column_labels = {'n', 'a', 'f(a)', 'b', 'f(b)', 'p', 'f(p)'};
 
   past_midpoint = a;
-
   fprintf('a, b = intervals, p = compute midpoint');
 
   for i = 1:N
@@ -82,6 +80,8 @@ function output = fn_bisection_method(a, b, f, TOL, N)
     new_row(1,6) = midpoint;
     new_row(1,7) = f(midpoint);
     bisection_result = vertcat(bisection_result, new_row);
+    bisection_result_cell = [column_labels; num2cell(bisection_result)];
+    assignin('base', 'bisection_result', bisection_result_cell);
 
     ##STOPPING CONDITION
     rel_error = fn_rel_err(midpoint, past_midpoint);
@@ -92,6 +92,8 @@ function output = fn_bisection_method(a, b, f, TOL, N)
       fprintf('\nROOT REACHED!!\n');
       plot(midpoint, f(midpoint), 'g*');
       text(midpoint, f(midpoint), ['p' n_str],"fontsize",15);
+
+      hold off;
       return;
     endif
 
@@ -107,10 +109,11 @@ function output = fn_bisection_method(a, b, f, TOL, N)
     past_midpoint = midpoint;
 
     ##PLOT the point
-    plot(midpoint, f(midpoint), 'm+');
+    scatter(midpoint, f(midpoint), 5, 'b', 'filled');
     #text(midpoint, f(midpoint), ['p' n_str],"fontsize",15);
   endfor
-  bisection_result_cell = [column_labels; num2cell(bisection_result)];
+
+  hold off;
   error('Method failed after %d iterations, last value: %f',N, midpoint);
 
 end

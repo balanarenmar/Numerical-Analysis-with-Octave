@@ -4,4 +4,4 @@
 #}
 
 f = @(x) exp(x) - (x.^3) - 5;
-fn_bisection_method(-2, -1, f, 1e-4, 50 )
+fn_bisection_method(-2, -1, f, 1e-4, 50 );

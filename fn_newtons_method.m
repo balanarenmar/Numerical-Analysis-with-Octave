@@ -1,12 +1,11 @@
 function output = fn_newtons_method(f, p0, TOL, N)
 
-
   offset = 4;     # determines the size of plotted graph
   a = p0 - offset;
   b = p0 + offset;
   points = 1000;
 
-  pkg load symbolic
+  pkg load symbolic;
   syms sym_x;
   sym_f = sym(f(sym_x));
 
@@ -65,21 +64,25 @@ function output = fn_newtons_method(f, p0, TOL, N)
 
     #plot initial approximation p0
     scatter(p0, f(p0), 10, 'k', 'filled');
-    text(p0, f(p0), ['p0=' num2str(p0)],"fontsize",15);
+    text(p0, f(p0), ['p_{0}=' num2str(p0)],"fontsize",15);
   ## END -- PLOTTING
 
   #store computed values
   newtons_result = zeros(0,5);
   column_labels = {'n', 'p', 'f(p)', 'p+1', "f(p+1)"};
 
+   ## FIX EQUATION FORMATTING for legend printing
+  function_str = func2legend(f);
+
+  init_approx = p0;
   p = p0; #initial approximation
 
-  #{#}
   %Perform Newton-Raphson iteration
   for i = 1:N
 
       p = p0 - f(p0) / df(p0);
-      fprintf('Iteration %d: p = %.9f\tf(p)=%.9f\n', i, p, f(p));
+
+      fprintf('i%d: p%d = %.9f\tf(p%d)=%.9f\tp%d = %.9f\tf(p%d)=%.9f\n', i, i-1, p0, i-1, f(p0), i, p, i, f(p));
 
       %STORE data
       new_row = zeros(1,5);
@@ -97,20 +100,18 @@ function output = fn_newtons_method(f, p0, TOL, N)
       abs_error = fn_abs_err(p0, p);
 
       if (abs_error < TOL)  ## CHANGED to absolute error to accept 0 as initial guess
-          fprintf('Converged to solution: p%d = %.8f\n',i-1, p);
+          fprintf('Converged to solution: p%d = %.9f\n',i-1, p);
           ## PLOT last tangent line
           pn = newtons_result(i,2);
           tangent_line = df(pn) * (x - pn) + f(pn);
           plot(x,tangent_line,'g--', 'LineWidth', .5);
           scatter(pn, f(pn), 50, 'g', 'filled');  % Mark the root
           n_str = num2str(i);
-          text(pn, f(pn), ['p' n_str],"fontsize",12);
+          text(pn, f(pn), ['p_{', n_str, '}'],"fontsize",20);
           j=i-1;
           k=0;
           ## PLOT the last 2 tangent lines
           #{
-
-
           while[j>0 && k<2]
             %point slope form: y - y0 = m(x-x0); where m=f'(p) and [x0,y0]=[p,f(p)];
             pn = newtons_result(j,2);
@@ -123,12 +124,34 @@ function output = fn_newtons_method(f, p0, TOL, N)
             k = k+1;
           endwhile
           #}
-          fprintf("NEWTON's FORMULA:\npn= %s\n", pn_formula_str);
 
+
+          fprintf("NEWTON's FORMULA:\npn= %s\n", pn_formula_str);
 
           #zoom the plot, centered on p
           xlim([p-offset, p+offset]);  % Set x-axis limits
           ylim([f(p)-offset, f(p)+offset]);
+
+
+          #p0 = init_approx;
+          #px = p;
+          xdist=abs(init_approx-p);        # distance from initial approx to fixed point
+          ydist=abs(f(init_approx)-f(p));
+          maxDist = max(xdist, ydist);
+          axisBorder = 1.5 * maxDist;   ## Makes plot axis 3x of maxDist
+          xm = (init_approx + p) / 2;      # Calculate the midpoint
+          ym = (f(init_approx) + f(p)) / 2;
+
+          ## MAKE CASE IF P0 is already a ROOT
+          if (xdist == 0)
+            xlim([a, b]);
+            ylim([a, b]);
+          else
+            xlim([xm-axisBorder, xm+axisBorder]);  # Set x-axis limits
+            ylim([ym-axisBorder, ym+axisBorder]);
+          end
+
+          legend({function_str, 'x axis', 'initial approx.', 'final tangent line', 'final approx.'}, 'Location', 'northwest');
 
           hold off;
           return;
@@ -137,7 +160,7 @@ function output = fn_newtons_method(f, p0, TOL, N)
       p0 = p;
 
       ## mark the current approximation as a dot
-      scatter(p, f(p), 10, 'b', 'filled');
+      #scatter(p, f(p), 10, 'b', 'filled');
 
   endfor
   hold off;

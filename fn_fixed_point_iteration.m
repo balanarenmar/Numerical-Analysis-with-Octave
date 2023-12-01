@@ -39,10 +39,8 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
   % Calculate the new axis limits
   x_center = (b + a) / 2;
   y_center = (y_max + y_min) / 2;
-
   x_limit = [x_center - max_range / 2, x_center + max_range / 2];
   y_limit = [y_center - max_range / 2, y_center + max_range / 2];
-
   % Set the aspect ratio to 'equal' and specify axis limits and tick locations
   #axis([x_limit, y_limit]);
 
@@ -65,15 +63,16 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
   px = p0;
   #plot p0
   scatter(px, f(px), 10, 'k', 'filled');
-  text(px, f(px), ['p0=' num2str(px)],"fontsize",15);
+  text(px, f(px), ['p_{0}=' num2str(px)],"fontsize",15);
 
+  ## FIX EQUATION FORMATTING for legend printing
+  function_str = func2legend(f);
+  fprintf('n\tp\t\tf(p)\t\ta_error\t\tr_error\n');
 
   ## Fixed Point Iteration LOOP
   for i = 1:N
     n_str = num2str(i);
     py = f(px);
-
-    fprintf('%3d\t p:%f\t p:%f\n',i,px,py);
 
     #Store data
     new_row = zeros(1,3);
@@ -87,32 +86,45 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
     ##STOPPING CONDITION
     abs_error = fn_abs_err(px, py);
     rel_error = fn_rel_err(px, py);
-    if (abs_error < TOL)
+
+    fprintf('%d\t%.10f\t%.10f\t%.11f\t%.11f \n',i,px,py,abs_error,rel_error);
+
+    if (rel_error < TOL)
       output = py;
-      fprintf('FIXED POINT REACHED at %f\n',py);
+      fprintf('FIXED POINT REACHED at x=%f\n',py);
       #plot(px, py, 'k*');
       scatter(px, py, 20, 'g', 'filled');
 
-      text(px, py, ['p' n_str '=' num2str(px)],"fontsize",15, 'Color','k', 'FontSize', 15);
+
       fixedpoint_result_cell = [column_labels; num2cell(fixedpoint_result)];
 
-      fprintf('%f - %f = %f\n', p0, px, abs(p0-px));
-      xdist=abs(p0-px);
-
-      # Calculate the midpoint
-      xm = (p0 + px) / 2;
+      xdist=abs(p0-px);        # distance from initial approx to fixed point
+      ydist=abs(f(p0)-f(px));
+      maxDist = max(xdist, ydist);
+      axisBorder = 1.5 * maxDist;   ## Makes plot axis 3x of maxDist
+      xm = (p0 + px) / 2;      # Calculate the midpoint
       ym = (f(p0) + py) / 2;
 
-      xlim([xm-xdist, xm+xdist]);  # Set x-axis limits
-      ylim([ym-xdist, ym+xdist]);
+      ## MAKE CASE IF P0 is exactly a FIXED POINT
+      if (xdist == 0)
+        xlim([a, b]);
+        ylim([a, b]);
+      else
+        text(px, py, ['p_{', n_str, '}=' num2str(px)],"fontsize",15, 'Color','k', 'FontSize', 15);
+        xlim([xm-axisBorder, xm+axisBorder]);  # Set x-axis limits
+        ylim([ym-axisBorder, ym+axisBorder]);
+      end
+      #fprintf(function_str);
+      xlabel ('x');ylabel ('y');
+      legend({function_str, 'y=x', 'initial approx.', 'final approx.'}, 'Location', 'northwest');
+
       hold off;
 
       return;
     endif
-    fprintf('\t abs err: %f\trel err: %f\n', abs_error, rel_error);
 
     ## mark the current approximation as a dot
-    scatter(px, py, 5, 'b', 'filled');
+    #scatter(px, py, 5, 'b', 'filled');
     #text(px, py, ['p' n_str],"fontsize",15);
 
     ##UPDATE VALUES

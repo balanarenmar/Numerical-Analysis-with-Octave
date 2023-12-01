@@ -20,7 +20,9 @@ function output = fn_bisection_method(a, b, f, TOL, N)
   Fb = f(b);
 
   if (Fa*Fb)>0
-    error("f(a) and f(b) are not opposite signs!");
+    fprintf('n\ta\t\tf(a)\t\tb\t\tf(b) \n');
+    fprintf('1\t%.6f\t%.6f\t%.6f\t%.6f \n',a,f(a),b,f(b));
+    fprintf("error: f(a) and f(b) are not opposite signs!\n");
     return;
   endif
 
@@ -60,15 +62,13 @@ function output = fn_bisection_method(a, b, f, TOL, N)
   column_labels = {'n', 'a', 'f(a)', 'b', 'f(b)', 'p', 'f(p)'};
 
   past_midpoint = a;
-  fprintf('a, b = intervals, p = compute midpoint');
+  #fprintf('a, b = intervals, p = compute midpoint');
+  #fprintf('%3d\t   A:%f\t   B:%f\t   p:%f\n',i,a,b,midpoint);
 
+  fprintf('n\ta\t\tf(a)\t\tb\t\tf(b)\t\tp\t\tf(p)\t\ta_error\t\tr_error\n');
   for i = 1:N
     n_str = num2str(i);
     midpoint = (a + (b - a) / 2);
-    fprintf('%3d\t   A:%f\t   B:%f\t   p:%f\n',i,a,b,midpoint);
-    fprintf('eval%d\tf(a):%f\tf(b):%f\tf(p):%f ',i,f(a),f(b),f(midpoint));
-    #p = midpoint;
-    #Fp = f(p); #y of midpoint
 
     #Store data
     new_row = zeros(1,7);
@@ -86,10 +86,13 @@ function output = fn_bisection_method(a, b, f, TOL, N)
     ##STOPPING CONDITION
     rel_error = fn_rel_err(midpoint, past_midpoint);
     abs_error = fn_abs_err(midpoint, past_midpoint);
-    fprintf('\t abs err: %f\trel err: %f\n', abs_error, rel_error);
+
+    fprintf('%d\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f \n',i,a,f(a),b,f(b),midpoint,f(midpoint),abs_error,rel_error);
+
+
     if (f(midpoint)==0) || (rel_error < TOL)
       output = midpoint;
-      fprintf('\nROOT REACHED!!\n');
+      fprintf('\nROOT REACHED: %.8f\n',midpoint);
       plot(midpoint, f(midpoint), 'g*');
       text(midpoint, f(midpoint), ['p' n_str],"fontsize",15);
 

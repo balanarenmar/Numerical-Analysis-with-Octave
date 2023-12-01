@@ -4,4 +4,4 @@
 #}
 
 f = @(x) (x.^6) - x - 1;
-fn_bisection_method(1, 2, f, 1e-5, 100)
+fn_bisection_method(1, 2, f, 1e-5, 100);

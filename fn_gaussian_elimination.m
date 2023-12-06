@@ -1,3 +1,5 @@
+function x = fn_gaussian_elimination(A)
+
   format;
   ## Matrix size
   n = 3;        ## Number of Unknowns & Equations
@@ -80,3 +82,5 @@ A
 
     fprintf("Procedure Completed Successfully\n");
     ## X is a row vector containing solutions
+
+ end

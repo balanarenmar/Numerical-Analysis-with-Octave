@@ -5,16 +5,19 @@ function function_str = func2legend(f)
   function_str = func2str(f);
   function_str = strrep(function_str, '.', '');       # Remove periods from the string
 
+  function_str = strrep(function_str, ' ', '');      # Remove ALL whitespaces
+  function_str = strrep(function_str,'.','');       # Remove periods from the string
+  function_str = strrep(function_str, 'exp','e^{');
+  function_str = strrep(function_str, '@(x)','')
+
   ## REMEMBER TO ADD *1 to end example: e^{}*1
-  function_str = strrep(function_str, ' * 1', '}');   # trick to close brackets when e has exponent.
-  function_str = strrep(function_str, '@(x)', '');
-  function_str = strrep(function_str, 'exp', 'e^{');
-  function_str = strrep(function_str, 'e^{ ', 'e^{');
   function_str = strrep(function_str, '[', '{');
   function_str = strrep(function_str, ']', '}');
-  function_str = strrep(function_str, ' ^ ', '^');
-  function_str = strrep(function_str, '^ ', '^');
-  function_str = strrep(function_str, 'cos (', 'cos(');
-  function_str = strtrim(function_str);               # Remove leading and trailing whitespaces
+  function_str = strrep(function_str, '*1','}');   # trick to close brackets when e has exponent.
+
+  #separate terms with spaces
+  function_str = strrep(function_str, '+', ' + ');
+  function_str = strrep(function_str, '-', ' -');
+
   return;
   end

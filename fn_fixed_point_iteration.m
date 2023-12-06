@@ -5,7 +5,6 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
   b = p0 + offset;
 
   points = 10000;
-
   ## a, b are endpoints of graph
   ## p0 is initial approximation
 
@@ -67,6 +66,7 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
 
   ## FIX EQUATION FORMATTING for legend printing
   function_str = func2legend(f);
+
   fprintf('n\tp\t\tf(p)\t\ta_error\t\tr_error\n');
 
   ## Fixed Point Iteration LOOP
@@ -116,6 +116,9 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
       end
       #fprintf(function_str);
       xlabel ('x');ylabel ('y');
+
+
+      function_str
       legend({function_str, 'y=x', 'initial approx.', 'final approx.'}, 'Location', 'northwest');
 
       hold off;

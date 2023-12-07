@@ -21,11 +21,15 @@ function output = fn_newtons_method(f, p0, TOL, N)
   function_str = strrep(function_str, 'exp', 'e ^');   ## FIX FORMATTING
   function_str = strtrim(function_str);       # Remove the leading and trailing whitespaces
 
+  function_str = func2legend(f)
+
   derivative_str = func2str(df);
   derivative_str = strrep(derivative_str, '.', '');
   derivative_str = strrep(derivative_str, 'sym_x', 'x');
   derivative_str = strrep(derivative_str  , 'exp', 'e ^');
   derivative_str = strrep(derivative_str, '@(x)', '');
+
+  derivative_str = func2legend(df)
 
   pn_formula_str = ["pn-1 - [(", function_str, ") / (", derivative_str, ")]"];
   pn_formula_str = strrep(pn_formula_str, 'x', 'pn-1');
@@ -51,9 +55,6 @@ function output = fn_newtons_method(f, p0, TOL, N)
     y_center = (y_max + y_min) / 2;
     x_limit = [x_center - max_range / 2, x_center + max_range / 2];
     y_limit = [y_center - max_range / 2, y_center + max_range / 2];
-    % Determine the tick locations at intervals of 2
-    x_ticks = floor(x_limit(1)/2)*2 : 2 : ceil(x_limit(2)/2)*2;
-    y_ticks = floor(y_limit(1)/2)*2 : 2 : ceil(y_limit(2)/2)*2;
     % Set the aspect ratio to 'equal' and specify axis limits and tick locations
     axis([x_limit, y_limit]);
     axis equal;
@@ -71,7 +72,7 @@ function output = fn_newtons_method(f, p0, TOL, N)
   newtons_result = zeros(0,5);
   column_labels = {'n', 'p', 'f(p)', 'p+1', "f(p+1)"};
 
-   ## FIX EQUATION FORMATTING for legend printing
+  ## FIX EQUATION FORMATTING for legend printing
   function_str = func2legend(f);
 
   init_approx = p0;
@@ -101,6 +102,7 @@ function output = fn_newtons_method(f, p0, TOL, N)
 
       if (abs_error < TOL)  ## CHANGED to absolute error to accept 0 as initial guess
           fprintf('Converged to solution: p%d = %.9f\n',i-1, p);
+
           ## PLOT last tangent line
           pn = newtons_result(i,2);
           tangent_line = df(pn) * (x - pn) + f(pn);
@@ -110,40 +112,22 @@ function output = fn_newtons_method(f, p0, TOL, N)
           text(pn, f(pn), ['p_{', n_str, '}'],"fontsize",20);
           j=i-1;
           k=0;
-          ## PLOT the last 2 tangent lines
-          #{
-          while[j>0 && k<2]
-            %point slope form: y - y0 = m(x-x0); where m=f'(p) and [x0,y0]=[p,f(p)];
-            pn = newtons_result(j,2);
-            tangent_line = df(pn) * (x - pn) + f(pn);
-            plot(x,tangent_line,'r--', 'LineWidth', .5);
-            plot(pn, f(pn), 'm+');
-            n_str = num2str(j);
-            text(pn, f(pn), ['p' n_str],"fontsize",10);
-            j = j-1;
-            k = k+1;
-          endwhile
-          #}
-
 
           fprintf("NEWTON's FORMULA:\npn= %s\n", pn_formula_str);
 
           #zoom the plot, centered on p
-          xlim([p-offset, p+offset]);  % Set x-axis limits
-          ylim([f(p)-offset, f(p)+offset]);
+          #xlim([p-offset, p+offset]);  % Set x-axis limits
+          #ylim([f(p)-offset, f(p)+offset]);
 
-
-          #p0 = init_approx;
-          #px = p;
-          xdist=abs(init_approx-p);        # distance from initial approx to fixed point
-          ydist=abs(f(init_approx)-f(p));
-          maxDist = max(xdist, ydist);
-          axisBorder = 1.5 * maxDist;   ## Makes plot axis 3x of maxDist
-          xm = (init_approx + p) / 2;      # Calculate the midpoint
+          xDist=abs(init_approx-p);        # distance from initial approx to fixed point
+          yDist=abs(f(init_approx)-f(p));
+          maxDist = max(xDist, yDist);
+          axisBorder = 3/2 * maxDist;   ## Makes plot axis 3x of maxDist
+          xm = (init_approx + p) / 2;   ## Calculate the midpoint
           ym = (f(init_approx) + f(p)) / 2;
 
           ## MAKE CASE IF P0 is already a ROOT
-          if (xdist == 0)
+          if (xDist == 0)
             xlim([a, b]);
             ylim([a, b]);
           else

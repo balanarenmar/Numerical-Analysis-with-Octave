@@ -6,16 +6,21 @@ function function_str = func2legend(f)
   function_str = strrep(function_str, '.', '');       # Remove periods from the string
 
   function_str = strrep(function_str, ' ', '');      # Remove ALL whitespaces
-  function_str = strrep(function_str,'.','');       # Remove periods from the string
+  function_str = strrep(function_str,'.','');        # Remove periods from the string
+  function_str = strrep(function_str, '*', '');      # Remove asterisks
   function_str = strrep(function_str, 'exp','e^{');
-  function_str = strrep(function_str, '@(x)','')
+  function_str = strrep(function_str, '@(x)','');
 
   ## REMEMBER TO ADD *1 to end example: e^{}*1
   function_str = strrep(function_str, '[', '{');
   function_str = strrep(function_str, ']', '}');
   function_str = strrep(function_str, '*1','}');   # trick to close brackets when e has exponent.
 
-  #separate terms with spaces
+  # NEWTONS METHOD exclusive (derivatives)
+  function_str = strrep(function_str, 'sym_x', 'x');
+
+
+  # separate terms with spaces
   function_str = strrep(function_str, '+', ' + ');
   function_str = strrep(function_str, '-', ' -');
 

@@ -1,7 +1,5 @@
   format;
-  ## Matrix size
-  n = 3;        ## Number of Unknowns & Equations
-  m = n;
+
 
   ## prompt user to input
 
@@ -17,9 +15,31 @@
        0 0 0 0 4;
        ];
 
-  A = [4 -1 1 8;
-        2 5 2 3;
-        1 2 4 11;]
+  A = [5 1 1;
+       1 4 1;
+       1 1 3;];
+
+  b = [5;        # column vector of right side equation
+       4;
+       3;];
+
+
+
+    A = [1 -1 2 -1;
+       2 -2 3 -3;
+       1 1 1 0;
+       1 -1 4 3;];
+   b = [-8;
+       -20;
+       -2;
+       4;];
+  A = [A, b]  #Augmented Matrix
+
+
+  ## Matrix size
+  n = rows(A);        ## Number of Unknowns & Equations
+  m = n;
+
 
 
   L = eye(n); ##lower triangular matrix

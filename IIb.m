@@ -1,4 +1,6 @@
 #{
+  FIXED POINT ITERATION
+
  Construct an Octave function for the fixed-point iteration following the given algorithm in class.
 #}
 

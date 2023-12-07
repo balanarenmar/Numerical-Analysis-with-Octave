@@ -6,19 +6,23 @@ function x = fn_LU_decomposition(A, b)
   ## Check if matrix A is nxn. else
   if (rows(A) != columns(A))
       printf('error. A is NOT a square matrix!!!\n');
+      errer('aborted.');
       x = [0];
       return;
   endif
 
   n = rows(A);
 
-  [L, U] = fn_LU_factorization(A)
+  [U, L] = fn_LU_factorization(A);
 
   # forward substitution
   # A * x = b.        # let A = L * U
   # L * U * x = b     # let y = U * x
   # L * y = b         #solve for y.
 
+  L
+  U
+  L * U
 
   x = zeros(n,1);        #column vector
   y = zeros(n,1);

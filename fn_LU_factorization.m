@@ -18,6 +18,7 @@ function [U, L] = fn_LU_factorization(A)
     U(1,1) = A(1,1) / L(1,1);
     if (L(1,1) * U(1,1)) == 0
         fprintf('error. LU Factorization impossible.\n');
+        error('impossible');
         return;
     endif
 
@@ -43,6 +44,7 @@ function [U, L] = fn_LU_factorization(A)
 
         if (L(i,i)*U(i,i)) == 0
           fprintf('error. LU Factorization impossible.\n');
+          error('L(i,i)*U(i,i) == 0');
           return;
         endif
 

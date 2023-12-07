@@ -1,4 +1,6 @@
 #{
+ NEWTONS METHOD
+
  Create an Octave program that utilizes the given algorithm for Newton¡¯s method to approximate the root of
  any function. Put an additional column in the output for the function evaluations using approximations.
 #}

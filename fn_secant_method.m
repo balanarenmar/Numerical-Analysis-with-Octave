@@ -7,8 +7,6 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
   ## N is max iterations
   points = 1000; ## points plotted
 
-
-
   offset = 4;     # determines the size of plotted graph
   a = p0 - offset;
   b = p0 + offset;
@@ -25,7 +23,6 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
 
   ## SECANT FORMULA pn = pn-1 - [(f(pn-1))(pn-1 - pn-2)/(f(pn-1) - f(pn-2))]
   # Convert function handle to string
-  #function_str = func2str(f);
   function_str = func2legend(f);
 
     ## PLOTTING
@@ -33,29 +30,15 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
     grid on;
     title('Secant Method');
     set(gca,'FontSize',20);
-    y_min = min(y);
-    y_max = max(y);
-    % Calculate the range for both x and y
-    x_range = b - a;
-    y_range = y_max - y_min;
-    % Determine the maximum range for the aspect ratio
-    max_range = max(x_range, y_range);
-    % Calculate the new axis limits
-    x_center = (b + a) / 2;
-    y_center = (y_max + y_min) / 2;
-    x_limit = [x_center - max_range / 2, x_center + max_range / 2];
-    y_limit = [y_center - max_range / 2, y_center + max_range / 2];
 
-    % Set the aspect ratio to 'equal' and specify axis limits and tick locations
-    axis([x_limit, y_limit]);
     axis equal;
     hold on;
 
     #Plot p0 and p1
     plot_p0 = scatter(p0, q0, 20, 'b', 'filled');
     plot_p1 = scatter(p1, q1, 20, 'b', 'filled');
-    text(p0, q0, "p0","fontsize",12);
-    text(p1, q1, "p1","fontsize",12);
+    text(p0, q0, " p_{0}","fontsize",18);
+    text(p1, q1, " p_{1}","fontsize",18);
 
     slope_secant = (q1 - q0) / (p1 - p0);
     intercept_secant = q0 - slope_secant * p0;
@@ -80,9 +63,12 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
   OG_p0 = p0;
   OG_p1 = p1;
 
+  ## STEP 1,2,5
   for i = 2:N
-    p = p1 - q1*(p1 - p0)/(q1 - q0);
-    fprintf('P%02d = %.8f \n', i, p );
+
+    ## STEP 3
+    p = p1 - q1*(p1 - p0)/(q1 - q0);  # Compute p's of i
+    fprintf('p%02d = %.8f \n', i, p );
 
     %STORE data
       new_row = zeros(1,5);
@@ -99,21 +85,23 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
 
     ## Check for convergence
     rel_error = fn_rel_err(p0, p);
+
+    ## STEP 4
     if (rel_error < TOL)
         fprintf('Converged to solution: p%d = %.8f\n',i, p);
         scatter(p, f(p), 20, 'g', 'filled');
-        text(p, f(p), ['p' num2str(i)],"fontsize",13);
+        text(p, f(p), [' p_{' num2str(i) '}'],"fontsize",20);
 
         maxX_value = max(p, max(OG_p0, OG_p1));
         minX_value = min(p, min(OG_p0, OG_p1));
         maxY_value = max(f(p), max(f(OG_p0), f(OG_p1)));
         minY_value = min(f(p), min(f(OG_p0), f(OG_p1)));
 
-        midX_value = median([p, OG_p0, OG_p1])
-        midY_value = median([f(p), f(OG_p0), f(OG_p1)])
+        midX_value = median([p, OG_p0, OG_p1]);
+        midY_value = median([f(p), f(OG_p0), f(OG_p1)]);
 
-        ydist = abs(maxY_value - minY_value)
-        xdist = abs(maxX_value - minX_value)
+        ydist = abs(maxY_value - minY_value);
+        xdist = abs(maxX_value - minX_value);
 
         maxDist = max(xdist, ydist);
         ## Plot size  = axisBorder * 2
@@ -121,15 +109,15 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
         axisBorder = (5/8 * maxDist);   ## because plot square = 2*(axisBorder)
 
         #center of plot
-        xm = xdist/2;
-        ym = ydist/2;
+
+        xm = (maxX_value + minX_value)/2;
+        ym = (maxY_value + minY_value)/2;
 
         # Set x-axis limits as "ZOOM"
         xlim([xm-axisBorder, xm+axisBorder]);
         ylim([ym-axisBorder, ym+axisBorder]);
 
-        function_str
-        #legend([plot_function,plot_p0,plot_p1], 'Location', 'northwest')
+        #function_str
         legend({function_str, 'p_0', 'p_1', 'secant of p_0 p_1','final approximation p_n'}, 'Location', 'northwest');
 
         output = p;
@@ -137,6 +125,7 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
         return;
     endif
 
+    ## STEP 6 - update values
     p0 = p1;
     q0 = q1;
     p1 = p;

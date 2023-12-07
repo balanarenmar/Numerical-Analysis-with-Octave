@@ -91,7 +91,7 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
 
     if (rel_error < TOL)
       output = py;
-      fprintf('FIXED POINT REACHED at x=%f\n',py);
+      fprintf('FIXED POINT REACHED at x=%f, iteration %d\n',px, i);
       #plot(px, py, 'k*');
       scatter(px, py, 20, 'g', 'filled');
 

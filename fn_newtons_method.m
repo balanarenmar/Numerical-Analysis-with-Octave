@@ -13,23 +13,17 @@ function output = fn_newtons_method(f, p0, TOL, N)
   df = function_handle(sym_df);
 
   ## NEWTON's FORMULA pn = pn-1 - [(f(pn-1))/(f'(pn-1))]
-  # Convert function handle to string
-  function_str = func2str(f);
 
-  function_str = strrep(function_str, '.', '');       # Remove periods from the string
-  function_str = strrep(function_str, '@(x)', '');
-  function_str = strrep(function_str, 'exp', 'e ^');   ## FIX FORMATTING
-  function_str = strtrim(function_str);       # Remove the leading and trailing whitespaces
-
-  function_str = func2legend(f)
+  ## FIX EQUATION FORMATTING for legend printing
+  function_str = func2legend(f);
 
   derivative_str = func2str(df);
   derivative_str = strrep(derivative_str, '.', '');
   derivative_str = strrep(derivative_str, 'sym_x', 'x');
   derivative_str = strrep(derivative_str  , 'exp', 'e ^');
   derivative_str = strrep(derivative_str, '@(x)', '');
-
-  derivative_str = func2legend(df)
+  derivative_str = strrep(derivative_str, ' ', '');
+  derivative_str = strrep(derivative_str, '*', '');
 
   pn_formula_str = ["pn-1 - [(", function_str, ") / (", derivative_str, ")]"];
   pn_formula_str = strrep(pn_formula_str, 'x', 'pn-1');
@@ -43,20 +37,6 @@ function output = fn_newtons_method(f, p0, TOL, N)
     grid on;
     title('Newton-Raphson Method');
     set(gca,'FontSize',20);
-    y_min = min(y);
-    y_max = max(y);
-    % Calculate the range for both x and y
-    x_range = b - a;
-    y_range = y_max - y_min;
-    % Determine the maximum range for the aspect ratio
-    max_range = max(x_range, y_range);
-    % Calculate the new axis limits
-    x_center = (b + a) / 2;
-    y_center = (y_max + y_min) / 2;
-    x_limit = [x_center - max_range / 2, x_center + max_range / 2];
-    y_limit = [y_center - max_range / 2, y_center + max_range / 2];
-    % Set the aspect ratio to 'equal' and specify axis limits and tick locations
-    axis([x_limit, y_limit]);
     axis equal;
     hold on;
 
@@ -65,25 +45,28 @@ function output = fn_newtons_method(f, p0, TOL, N)
 
     #plot initial approximation p0
     scatter(p0, f(p0), 10, 'k', 'filled');
-    text(p0, f(p0), ['p_{0}=' num2str(p0)],"fontsize",15);
+    text(p0, f(p0), [' p_{0}=' num2str(p0)],"fontsize",15);
   ## END -- PLOTTING
 
   #store computed values
   newtons_result = zeros(0,5);
   column_labels = {'n', 'p', 'f(p)', 'p+1', "f(p+1)"};
 
-  ## FIX EQUATION FORMATTING for legend printing
-  function_str = func2legend(f);
 
   init_approx = p0;
   p = p0; #initial approximation
 
+  fprintf('f(x):\t%s\n',function_str);
+  fprintf('f''(x):\t%s\n\n',derivative_str);
+
   %Perform Newton-Raphson iteration
+  ## STEP 1, 2, 5
   for i = 1:N
 
+      ## STEP 3
       p = p0 - f(p0) / df(p0);
 
-      fprintf('i%d: p%d = %.9f\tf(p%d)=%.9f\tp%d = %.9f\tf(p%d)=%.9f\n', i, i-1, p0, i-1, f(p0), i, p, i, f(p));
+      fprintf('i%d: p%d = %.9f\tf(p%d) = %.9f\tp%d = %.9f\tf(p%d) = %.9f\n', i, i-1, p0, i-1, f(p0), i, p, i, f(p));
 
       %STORE data
       new_row = zeros(1,5);
@@ -100,16 +83,19 @@ function output = fn_newtons_method(f, p0, TOL, N)
       #rel_error = fn_rel_err(p0, p);
       abs_error = fn_abs_err(p0, p);
 
+      ## STEP 4
       if (abs_error < TOL)  ## CHANGED to absolute error to accept 0 as initial guess
-          fprintf('Converged to solution: p%d = %.9f\n',i-1, p);
+          fprintf('Converged to solution: p%d = %.9f\n\n',i, p);
 
           ## PLOT last tangent line
           pn = newtons_result(i,2);
           tangent_line = df(pn) * (x - pn) + f(pn);
           plot(x,tangent_line,'g--', 'LineWidth', .5);
-          scatter(pn, f(pn), 50, 'g', 'filled');  % Mark the root
+
+          ## Mark the root
+          scatter(pn, f(pn), 50, 'g', 'filled');
           n_str = num2str(i);
-          text(pn, f(pn), ['p_{', n_str, '}'],"fontsize",20);
+          text(pn, f(pn), [' p_{', n_str, '}'],"fontsize",20);
           j=i-1;
           k=0;
 
@@ -140,8 +126,9 @@ function output = fn_newtons_method(f, p0, TOL, N)
           hold off;
           return;
       endif
-      % Update the approximation
-      p0 = p;
+
+      ## STEP 6
+      p0 = p; % Update the approximation
 
       ## mark the current approximation as a dot
       #scatter(p, f(p), 10, 'b', 'filled');

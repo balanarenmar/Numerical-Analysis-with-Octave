@@ -3,5 +3,5 @@
   10^-4.
 #}
 
-f = @(x) exp(x) - (x.^3) - 5;
-fn_bisection_method(-2, -1, f, 1e-4, 50 );
+f = @(x) exp(x)*1 - x.^[3] - 5;
+fn_bisection_method(-2, -1, f, 1e-4, 100);

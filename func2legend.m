@@ -7,7 +7,6 @@ function function_str = func2legend(f)
 
   function_str = strrep(function_str, ' ', '');      # Remove ALL whitespaces
   function_str = strrep(function_str,'.','');        # Remove periods from the string
-  function_str = strrep(function_str, '*', '');      # Remove asterisks
   function_str = strrep(function_str, 'exp','e^{');
   function_str = strrep(function_str, '@(x)','');
 
@@ -19,6 +18,7 @@ function function_str = func2legend(f)
   # NEWTONS METHOD exclusive (derivatives)
   function_str = strrep(function_str, 'sym_x', 'x');
 
+  function_str = strrep(function_str, '*', '');      # Remove asterisks
 
   # separate terms with spaces
   function_str = strrep(function_str, '+', ' + ');

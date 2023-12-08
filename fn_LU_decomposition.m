@@ -22,7 +22,6 @@ function x = fn_LU_decomposition(A, b)
 
   L
   U
-  L * U
 
   x = zeros(n,1);        #column vector
   y = zeros(n,1);
@@ -38,6 +37,12 @@ function x = fn_LU_decomposition(A, b)
   endfor
 
  # y
+ #{#}
+  fprintf('   Computed y values:\n');
+  for(i=1:n)
+      fprintf('\ty%d: %f\n',i,y(i,1));
+  endfor
+  fprintf('\n');
 
   # backward substitution
   x(n,1) = y(n,1) / U(n,n);
@@ -52,8 +57,10 @@ function x = fn_LU_decomposition(A, b)
       x(i, 1) = (y(i,1) - summation) ./ U(i,i);
   endfor
 
-  fprintf('The system of Linear equations A has been solved! solution:\n');
-  x
+  fprintf("The system of Linear equations A has been solved (LU Decomposition)! solution:\n");
+    for(i=1:n)
+        fprintf('\tx%d: %f\n',i,x(i,1));
+    endfor
 
   return;
   end

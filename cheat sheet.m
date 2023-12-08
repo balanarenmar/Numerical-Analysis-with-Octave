@@ -18,7 +18,7 @@ f = linspace(0,5,6)
 ##col vector
 v = [1;3;5;7;9]
 
-##var = row_vector'
+##col_vector = row_vector'
 g = f'
 
 ##MATRIX

@@ -1,0 +1,70 @@
+#{
+  Write an Octave code that gives the LU factorization of any matrix.
+
+  user inputs an nxn matrix o
+#}
+
+
+clc;
+printf('\t\tNumerical Analysis\n');
+fprintf('\t\t---Coding Exam---\n\n');
+n = input('Enter the size of your square matrix: ');
+
+
+while ~isnumeric(n) || ~isscalar(n) || n <= 1
+    clc
+    fprintf('\t\tNumerical Analysis\n');
+    fprintf('\t\t---Coding Exam---\n\n');
+    disp('Invalid input. Please enter a positive integer greater than 1.\n');
+    n = input('Enter the size of your square matrix: ');
+end
+
+fprintf('\nmatrix size: %d\n\n',n);
+
+num_rows=n;
+num_cols=n;
+A = zeros(n,n);
+
+% Prompt the user for each row in the matrix
+for i = 1:num_rows
+    prompt = sprintf('Enter row %d values (separated by spaces): ', i);
+    user_input = input(prompt, 's'); % 's' flag reads input as a string
+
+    % Split the input string into individual values
+    values = str2num(user_input);
+
+    % Check if the input is numeric and has the correct number of columns
+    while ~isnumeric(values) || numel(values) ~= num_cols
+        fprintf('Invalid input. Please enter %d numeric values.\t or enter ''x'' to quit\n', num_cols);
+        user_input = input(prompt, 's');
+
+        if(user_input == 'x')
+          fprintf('\nprogram terminated.\n\n');
+          return;
+        endif
+        values = str2num(user_input);
+    end
+
+    A(i, :) = values;
+end
+
+% Display the resulting matrix
+clc;
+printf('\t\tNumerical Analysis\n');
+fprintf('\t\t---Coding Exam---\n\n');
+fprintf('\nmatrix size: %d\n\n',n);
+fprintf('User Matrix:\n');
+disp(A);
+fprintf('\n\n');
+
+[U, L] = fn_LU_factorization(A);
+
+fprintf('Upper triangular matrix U:\n');
+disp(U);
+fprintf('\n\n');
+
+fprintf('Lower triangular matrix L:\n');
+disp(L);
+fprintf('\n\n');
+
+

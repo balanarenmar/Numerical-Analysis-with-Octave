@@ -62,13 +62,13 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
   px = p0;
   #plot p0
   scatter(px, f(px), 10, 'k', 'filled');
-  text(px, f(px), ['p_{0}=' num2str(px)],"fontsize",15);
+  text(px, f(px), [' p_{0}=' num2str(px)],"fontsize",15);
 
   ## FIX EQUATION FORMATTING for legend printing
   function_str = func2legend(f);
-
-  fprintf('n\tp\t\tf(p)\t\ta_error\t\tr_error\n');
-
+  fprintf('Fixed point iteration of f(x) = %s \n',function_str);
+  fprintf('n\tp\t\tf(p)\t\ta_error\t\n');
+  init_aprox = p0;
   ## Fixed Point Iteration LOOP
   for i = 1:N
     n_str = num2str(i);
@@ -85,13 +85,13 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
 
     ##STOPPING CONDITION
     abs_error = fn_abs_err(px, py);
-    rel_error = fn_rel_err(px, py);
+    #rel_error = fn_rel_err(px, py);
 
-    fprintf('%d\t%.10f\t%.10f\t%.11f\t%.11f \n',i,px,py,abs_error,rel_error);
-
-    if (rel_error < TOL)
+    #fprintf('%d\t%.10f\t%.10f\t%.11f\t%.11f \n',i,px,py,abs_error,rel_error);
+    fprintf('%d\t%.10f\t%.10f\t%.11f \n',i,px,py,abs_error); ## no rel_error
+    if (abs_error < TOL)
       output = py;
-      fprintf('FIXED POINT REACHED at x=%f, iteration %d\n',px, i);
+      fprintf('\nFIXED POINT REACHED at x=%f at iteration %d, from p0=%f\n',px,i,init_aprox);
       #plot(px, py, 'k*');
       scatter(px, py, 20, 'g', 'filled');
 
@@ -110,15 +110,13 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
         xlim([a, b]);
         ylim([a, b]);
       else
-        text(px, py, ['p_{', n_str, '}=' num2str(px)],"fontsize",15, 'Color','k', 'FontSize', 15);
+        text(px, py, [' p_{', n_str, '}=' num2str(px)],"fontsize",15, 'Color','k', 'FontSize', 15);
         xlim([xm-axisBorder, xm+axisBorder]);  # Set x-axis limits
         ylim([ym-axisBorder, ym+axisBorder]);
       end
       #fprintf(function_str);
       xlabel ('x');ylabel ('y');
 
-
-      function_str
       legend({function_str, 'y=x', 'initial approx.', 'final approx.'}, 'Location', 'northwest');
 
       hold off;
@@ -136,13 +134,13 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
 endfor
 
   #if not found
-  text(px, f(px), ['px=' num2str(px)],"fontsize",15);
+  text(px, f(px), [' px=' num2str(px)],"fontsize",15);
 
   #zoom the plot, centered on p0
   xlim([p0-15, p0+15]);  % Set x-axis limits
   ylim([f(p0)-15, f(p0)+15]);
-
+  output = py;
   hold off;
-  error('Method failed after %d iterations, last value: %f',N, py);
+  fprintf('error. Method failed after %d iterations, p0=%f. last value: %f\t\n',N,init_aprox, py);
 
 end

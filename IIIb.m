@@ -8,5 +8,5 @@
 f = @(x) x + exp(-x.^[2])*1 .* cos(x);
 p0 = 0; ## Error is caught when checking for relative error.
 #p0 = 1;
-fn_newtons_method(f, p0, 1e-8, 50)
+fn_newtons_method(f, p0, 1e-8, 50);
 

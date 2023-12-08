@@ -85,7 +85,7 @@ function output = fn_newtons_method(f, p0, TOL, N)
 
       ## STEP 4
       if (abs_error < TOL)  ## CHANGED to absolute error to accept 0 as initial guess
-          fprintf('Converged to solution: p%d = %.9f\n\n',i, p);
+          fprintf('Converged to solution: p%d = %.9f using Newton-Raphson Method.\n\n',i, p);
 
           ## PLOT last tangent line
           pn = newtons_result(i,2);

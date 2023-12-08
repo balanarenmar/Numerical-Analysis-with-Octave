@@ -8,4 +8,4 @@
 f = @(x) x.^[4] - 2*(x.^[2]) - 4;
 p0 = 2;
 p1 = 3;
-p = fn_secant_method(f, p0, p1, 1e-6, 100)
+p = fn_secant_method(f, p0, p1, 1e-6, 100);

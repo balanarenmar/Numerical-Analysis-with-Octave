@@ -48,8 +48,6 @@ function x = fn_gaussian_elimination(A)
 
 endfor
 
-A
-
     if (A(n,n) == 0)
       fprintf('No unique solution exists.\n');
       unique_solution = false;
@@ -69,8 +67,11 @@ A
         x(i,1) = (A(i,n+1) - summation) ./ A(i,i);
     endfor
 
-    fprintf("Procedure Completed Successfully\n");
-    x
+    fprintf("The system of Linear equations A has been solved (Gaussian Elimination)! solution:\n");
+    for(i=1:n)
+        fprintf('\tx%d: %f\n',i,x(i,1));
+    endfor
+
     ## X is a row vector containing solutions
 
  end

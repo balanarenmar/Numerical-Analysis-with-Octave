@@ -47,18 +47,13 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
     plot_secant = plot(x_values_secant, y_values_secant, 'k--', 'LineWidth', 0.25);
 
     p = p1 - q1*(p1 - p0)/(q1 - q0);
-    % Calculate the y-value of the secant line at point p
-    y_secant_at_p = slope_secant * (p - p0) + q0;
-    #plot([p, p], [f(p), y_secant_at_p], 'k-', 'LineWidth', 0.5);
-
-    #plot p2
-    #scatter(p, f(p), 20, 'b', 'filled');
-    #text(p, f(p), "p2","fontsize",12);
-
-    #plot x and y axis
 
 
   ## END -- PLOTTING
+
+  fprintf('SECANT METHOD for f(x)= %s\n',function_str);
+  fprintf('Initial Approximations: p0=%.8f \t p1=%.8f\n\n',p0,p1);
+  #fprintf(' p0 = %.7f\t\tf(p0) = %.7f\tp1 = %.7f\t\tf(p1) = %.7f \n',p0,f(p0), p1, f(p1));
 
   OG_p0 = p0;
   OG_p1 = p1;
@@ -68,7 +63,8 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
 
     ## STEP 3
     p = p1 - q1*(p1 - p0)/(q1 - q0);  # Compute p's of i
-    fprintf('p%02d = %.8f \n', i, p );
+    #fprintf(' p%d = %.7f \n', i, p );
+    fprintf(' p%d = %.7f\t\tf(p%d) = %.7f\tp%d = %.7f\t\tf(p%d) = %.7f\tp%d = %.7f\t\tf(p%d) = %.8f\n',i-2,p0,i-2,f(p0), i-1,p1, i-1,f(p1), i,p, i,f(p));
 
     %STORE data
       new_row = zeros(1,5);
@@ -79,7 +75,7 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
       new_row(1,5) = f(p);
       secant_result = vertcat(secant_result, new_row);
       secant_result_cell = [column_labels; num2cell(secant_result)];
-
+      assignin('base', 'secant_result', secant_result_cell);
       #plot the next p
       #scatter(p, f(p), 10, 'b', 'filled');
 
@@ -88,7 +84,7 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
 
     ## STEP 4
     if (rel_error < TOL)
-        fprintf('Converged to solution: p%d = %.8f\n',i, p);
+        fprintf('\nConverged to solution: p%d = %.8f using Secant Method.\n\n',i, p);
         scatter(p, f(p), 20, 'g', 'filled');
         text(p, f(p), [' p_{' num2str(i) '}'],"fontsize",20);
 

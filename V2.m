@@ -1,13 +1,9 @@
+#{
+  GAUSSIAN ELIMINATION
 
-  # Gaussian Example 4
-  A = [1 -1 2 -1;
-       2 -2 3 -3;
-       1 1 1 0;
-       1 -1 4 3;];
-   b = [-8;
-       -20;
-       -2;
-       4;];
+ Construct a code that utilizes the given algorithm in class for Gaussian elimination with backward
+ substitution to solve the solution of any linear system.
+#}
 
   A = [5 1 1;
        1 4 1;
@@ -17,8 +13,11 @@
        3;];
 
 
-
   augmented_A = [A, b]  #Augmented Matrix
 
-  fn_gaussian_elimination(augmented_A);
+  x = fn_gaussian_elimination(augmented_A);
+
+  #fprintf('The alpha symbol is: \xCE\xB1\n');
+  #fprintf('Beta: \xCE\xB2\n');
+  #fprintf('Gamma: \xCE\xB3\n');
 

@@ -21,12 +21,17 @@ function output = fn_bisection_method(a, b, f, TOL, N)
   Fb = f(b);
   function_str = func2legend(f);
 
+  fprintf('bisection method of %s:\n\n',function_str);
+
+  #{
+
   if (Fa*Fb)>0
     fprintf('n\ta\t\tf(a)\t\tb\t\tf(b) \n');
     fprintf('1\t%.6f\t%.6f\t%.6f\t%.6f \n',a,f(a),b,f(b));
     error("error: f(a) and f(b) are not opposite signs!");
     return;
   endif
+  #}
 
   ## PLOTTING
   plot(x,y);
@@ -53,8 +58,8 @@ function output = fn_bisection_method(a, b, f, TOL, N)
   axis equal;
   hold on;
   #plot points a and b.
-  plot_a = scatter(a, Fa, 20, 'b', 'filled');
-  plot_b = scatter(b, Fb, 20, 'b', 'filled');
+  plot_a = scatter(a, Fa, 20, 'r', 'filled');
+  plot_b = scatter(b, Fb, 20, 'r', 'filled');
   text(a, Fa, " a","fontsize",18);
   text(b, Fb, " b","fontsize",18);
   ## END -- PLOTTING
@@ -66,6 +71,7 @@ function output = fn_bisection_method(a, b, f, TOL, N)
   past_midpoint = a;
   starting_a = a;
   starting_b = b;
+
 
 
   fprintf('n\ta\t\tf(a)\t\tb\t\tf(b)\t\tp - midpoint\tf(p)\t\ta_error\t\tr_error\n');
@@ -91,8 +97,9 @@ function output = fn_bisection_method(a, b, f, TOL, N)
     abs_error = fn_abs_err(midpoint, past_midpoint);
 
     fprintf('%d\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f \n',i,a,f(a),b,f(b),midpoint,f(midpoint),abs_error,rel_error);
-    ##STOPPING CONDITION
-    if (f(midpoint)==0) || (rel_error < TOL)
+    ## STOPPING CONDITION
+    ## STEP 4
+    if (f(midpoint)==0) || (abs_error < TOL)
       iteration = i;
       output = midpoint;
       p = midpoint;
@@ -151,7 +158,30 @@ function output = fn_bisection_method(a, b, f, TOL, N)
     #text(midpoint, f(midpoint), ['p' n_str],"fontsize",15);
   endfor
 
+
+  # plot the midpoints
+          #for(i=1:N)
+              #scatter(bisection_result(i, 6), bisection_result(i,7), 5, 'b', 'filled');
+          #endfor
+          #FIX Zooming
+          maxX_value = max(starting_a, starting_b);
+          minX_value = min(starting_a, starting_b);
+          maxY_value = max(f(starting_a), f(starting_b));
+          minY_value = min(f(starting_a), f(starting_b));
+          ydist = abs(maxY_value - minY_value);
+          xdist = abs(maxX_value - minX_value);
+          maxDist = max(xdist, ydist);
+          ## Plot size  = axisBorder * 2
+          ## axisBorder = maxDist * multiplier
+          axisBorder = (2/2 * maxDist);
+          #center of plot
+          xm = (maxX_value + minX_value)/2;
+          ym = (maxY_value + minY_value)/2;
+          # Set x-axis limits as "ZOOM"
+          xlim([xm-axisBorder, xm+axisBorder]);
+          ylim([ym-axisBorder, ym+axisBorder]);
+      #legend({function_str, 'a', 'b', 'final approximation p_n','midpoints'}, 'Location', 'northwest');
   hold off;
-  error('Method failed after %d iterations, last value: %f',N, midpoint);
+  fprintf('error. Method failed after %d iterations, TOL:%f,\t last midpoint: %f\n',N, TOL, midpoint);
 
 end

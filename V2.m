@@ -17,7 +17,8 @@
 
   x = fn_gaussian_elimination(augmented_A);
 
-  #fprintf('The alpha symbol is: \xCE\xB1\n');
-  #fprintf('Beta: \xCE\xB2\n');
-  #fprintf('Gamma: \xCE\xB3\n');
+      #fprintf(' solution:\n');
+      #fprintf(' \xCE\xB1 = %f\n',x(1,1));
+      #fprintf(' \xCE\xB2 = %f\n',x(2,1));
+      #fprintf(' \xCE\xB3 = %f\n',x(3,1));
 

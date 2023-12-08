@@ -53,8 +53,7 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
 
   fprintf('SECANT METHOD for f(x)= %s\n',function_str);
   fprintf('Initial Approximations: p0=%.8f \t p1=%.8f\n\n',p0,p1);
-  #fprintf(' p0 = %.7f\t\tf(p0) = %.7f\tp1 = %.7f\t\tf(p1) = %.7f \n',p0,f(p0), p1, f(p1));
-
+  fprintf(' pn-2\t\t\tf(pn-2) \t\tpn-1 \t\t\tf(pn-1) \t\tp(n) \t\t\tf(pn)\n');
   OG_p0 = p0;
   OG_p1 = p1;
 

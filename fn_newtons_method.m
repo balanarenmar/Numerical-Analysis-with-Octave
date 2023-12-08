@@ -80,8 +80,8 @@ function output = fn_newtons_method(f, p0, TOL, N)
       assignin('base', 'newtons_result', newtons_result_cell);
 
       % Check for convergence
-      #rel_error = fn_rel_err(p0, p);
-      abs_error = fn_abs_err(p0, p);
+      rel_error = fn_rel_err(p, p0);
+      abs_error = fn_abs_err(p, p0);
 
       ## STEP 4
       if (abs_error < TOL)  ## CHANGED to absolute error to accept 0 as initial guess

@@ -1,4 +1,6 @@
 function [px, i] = fn_FPI_noGraph(f, p0, TOL, N)
+  ## THIS Fixed Point Iteration does not plot the lines.
+  ## Special case for trying out multiple values of p0 quickly
 
   offset = 5;   # determines the size of plotted graph
   a = p0 - offset;

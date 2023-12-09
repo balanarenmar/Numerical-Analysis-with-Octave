@@ -135,5 +135,7 @@ function output = fn_newtons_method(f, p0, TOL, N)
 
   endfor
   hold off;
+
+  ## STEP 7
   error('Method failed after %d iterations, last value: %f',N, p);
   end

@@ -4,7 +4,6 @@
   user inputs an nxn matrix o
 #}
 
-
 clc;
 printf('\t\tNumerical Analysis\n');
 fprintf('\t\t---Coding Exam---\n\n');
@@ -66,5 +65,59 @@ fprintf('\n\n');
 fprintf('Lower triangular matrix L:\n');
 disp(L);
 fprintf('\n\n');
+
+  find_solutions = false;
+
+  fprintf('Would you like to continue and find solutions?\n');
+    prompt2 = sprintf('\t[1] Enter 1 for Yes.\n\t[0] Enter 0 for No.\n>> ');
+    user_input_str = input(prompt2, 's');
+    user_input = str2double(user_input_str);
+
+    ## validate input
+    while isnan(user_input) || ~ismember(user_input, [0, 1])
+        fprintf('\nInvalid input. Please enter 0 or 1.\n');
+        user_input_str = input(prompt2, 's');
+        user_input = str2double(user_input_str);
+    end
+
+  if user_input == 1
+
+      b = zeros(n,1);
+
+      # perform input of b
+      for i = 1:num_rows
+          prompt = sprintf('\tEnter b%d: ', i);
+          b(i, 1) = input(prompt);
+      endfor
+
+      x = fn_LU_decomposition(A,b);
+      clc;
+      printf('\t\tNumerical Analysis\n');
+      fprintf('\t\t---Coding Exam---\n\n');
+      fprintf('\nmatrix size: %d\n\n',n);
+      fprintf('User Matrix:\n');
+      disp(A);
+      fprintf('\n\n');
+      fprintf('Upper triangular matrix U:\n');
+      disp(U);
+      fprintf('\n\n');
+      fprintf('Lower triangular matrix L:\n');
+      disp(L);
+      fprintf('\n\n');
+      fprintf('right side of equations:\n');
+      for(i=1:num_rows)
+          fprintf('\tb%d: %f\n',i,b(i,1));
+      endfor
+      fprintf('\nUnique solution found:\n');
+      for(i=1:num_rows)
+          fprintf('\tx%d: %f\n',i,x(i,1));
+      endfor
+
+  else
+      fprintf('\nprogram terminated.\n\n');
+      return;
+  endif
+
+
 
 

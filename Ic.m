@@ -4,4 +4,4 @@
 #}
 
 f = @(x) 1 ./ (x - 2);
-fn_bisection_method(3, 7, f, 1e-500, 1000);
+fn_bisection_method(3, 7, f, 1e-500, 100);

@@ -1,6 +1,6 @@
 function [U, L] = fn_LU_factorization(A)
 
-
+  ## CHECK if matrix is not square NxN
   if (rows(A) != columns(A))
       printf('error. A is NOT a square matrix!!!\n');
       output = [0];
@@ -13,7 +13,6 @@ function [U, L] = fn_LU_factorization(A)
   U = eye(n);
 
   ## START LU FACTORIZATION:
-
     ## STEP1:
     U(1,1) = A(1,1) / L(1,1);
     if (L(1,1) * U(1,1)) == 0
@@ -27,10 +26,6 @@ function [U, L] = fn_LU_factorization(A)
         U(1,j) = A(1,j)/L(1,1);   # first row of U
         L(j,1) = A(j,1)/U(1,1);   # first col of L
     endfor
-
-    #fprintf('DEBUG #%d\n',1);
-    #L
-    #U
 
     ## STEP3:
     for(i=2:n-1)
@@ -61,8 +56,6 @@ function [U, L] = fn_LU_factorization(A)
             U(i,j) = 1/(L(i,i)) * (A(i,j) - summation1);
             L(j,i) = 1/(U(i,i)) * (A(j,i) - summation2);
         endfor
-
-
 
     endfor
 

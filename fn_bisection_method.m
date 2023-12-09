@@ -23,38 +23,34 @@ function output = fn_bisection_method(a, b, f, TOL, N)
 
   fprintf('bisection method of %s:\n\n',function_str);
 
-  #{
-
+  #{#}
+  ## ERROR CATCHING. f(a) and f(b) must be opposite signs!
   if (Fa*Fb)>0
     fprintf('n\ta\t\tf(a)\t\tb\t\tf(b) \n');
     fprintf('1\t%.6f\t%.6f\t%.6f\t%.6f \n',a,f(a),b,f(b));
-    error("error: f(a) and f(b) are not opposite signs!");
-    return;
+    fprintf("error: f(a) and f(b) are not opposite signs!\n");
+
+    prompt = sprintf('Would you like to continue bisection method despite f(a) and f(b) not being opposite signs?\n\t[Enter ''yes'' or ''no'']\n\t>> ');
+    user_input = input(prompt, 's');
+
+    # Check if the input is "yes" or "no" (case-insensitive)
+    while ~strcmpi(user_input, 'yes') && ~strcmpi(user_input, 'no')
+        fprintf('Invalid input. Please enter "yes" or "no".\n');
+        user_input = input(prompt, 's');
+    end
+
+    if strcmpi(user_input, 'no')
+        error('program terminated.');
+    end
+
   endif
-  #}
+
 
   ## PLOTTING
   plot(x,y);
   grid on;
   title('Bisection Method');
   set(gca,'FontSize',20);
-  y_min = min(y);
-  y_max = max(y);
-  % Calculate the range for both x and y
-  x_range = b - a;
-  y_range = y_max - y_min;
-  % Determine the maximum range for the aspect ratio
-  max_range = max(x_range, y_range);
-  % Calculate the new axis limits
-  x_center = (b + a) / 2;
-  y_center = (y_max + y_min) / 2;
-  x_limit = [x_center - max_range / 2, x_center + max_range / 2];
-  y_limit = [y_center - max_range / 2, y_center + max_range / 2];
-  % Determine the tick locations at intervals of 2
-  x_ticks = floor(x_limit(1)/2)*2 : 2 : ceil(x_limit(2)/2)*2;
-  y_ticks = floor(y_limit(1)/2)*2 : 2 : ceil(y_limit(2)/2)*2;
-  % Set the aspect ratio to 'equal' and specify axis limits and tick locations
-  axis([x_limit, y_limit]);
   axis equal;
   hold on;
   #plot points a and b.
@@ -64,20 +60,21 @@ function output = fn_bisection_method(a, b, f, TOL, N)
   text(b, Fb, " b","fontsize",18);
   ## END -- PLOTTING
 
-  #store computed values
+  ## store computed values
   bisection_result = zeros(0,7);
-  column_labels = {'n', 'a', 'f(a)', 'b', 'f(b)', 'p', 'f(p)'};
+  column_labels = {'n', 'a', 'f(a)', 'b', 'f(b)', 'p', 'Fp'};
 
-  past_midpoint = a;
+  past_p = a;
   starting_a = a;
   starting_b = b;
 
-
-
   fprintf('n\ta\t\tf(a)\t\tb\t\tf(b)\t\tp - midpoint\tf(p)\t\ta_error\t\tr_error\n');
+  ## STEP 1 & 2 & 5
   for i = 1:N
+    ## STEP 3
     n_str = num2str(i);
-    midpoint = (a + (b - a) / 2);
+    p = (a + (b - a) / 2);
+    Fp = f(p);
 
     #Store data
     new_row = zeros(1,7);
@@ -86,40 +83,39 @@ function output = fn_bisection_method(a, b, f, TOL, N)
     new_row(1,3) = f(a);
     new_row(1,4) = b;
     new_row(1,5) = f(b);
-    new_row(1,6) = midpoint;
-    new_row(1,7) = f(midpoint);
+    new_row(1,6) = p;
+    new_row(1,7) = Fp;
     bisection_result = vertcat(bisection_result, new_row);
     bisection_result_cell = [column_labels; num2cell(bisection_result)];
     assignin('base', 'bisection_result', bisection_result_cell);
 
+    rel_error = fn_rel_err(p, past_p);
+    abs_error = fn_abs_err(p, past_p);
 
-    rel_error = fn_rel_err(midpoint, past_midpoint);
-    abs_error = fn_abs_err(midpoint, past_midpoint);
-
-    fprintf('%d\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f \n',i,a,f(a),b,f(b),midpoint,f(midpoint),abs_error,rel_error);
+    fprintf('%d\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f \n',i,a,f(a),b,f(b),p,Fp,abs_error,rel_error);
     ## STOPPING CONDITION
     ## STEP 4
-    if (f(midpoint)==0) || (abs_error < TOL)
+    if (Fp==0) || (abs_error < TOL)
       iteration = i;
-      output = midpoint;
-      p = midpoint;
-      fprintf('\nROOT REACHED: %.8f\n',midpoint);
-      plot(midpoint, f(midpoint), 'g*');
-      text(midpoint, f(midpoint), [' p_{' n_str '}'],"fontsize",20);
+      output = p;
+      p = p;
+      fprintf('\nROOT REACHED: %.8f\n',p);
+      plot(p, Fp, 'g*');
+      text(p, Fp, [' p_{' n_str '}'],"fontsize",20);
 
-          # plot the midpoints
+          # plot the ps
           for(i=1:iteration)
               scatter(bisection_result(i, 6), bisection_result(i,7), 5, 'b', 'filled');
           endfor
-          plot(midpoint, f(midpoint), 'g*');
+          plot(p, Fp, 'g*');
           #FIX Zooming
           maxX_value = max(p, max(starting_a, starting_b));
           minX_value = min(p, min(starting_a, starting_b));
-          maxY_value = max(f(p), max(f(starting_a), f(starting_b)));
-          minY_value = min(f(p), min(f(starting_a), f(starting_b)));
+          maxY_value = max(Fp, max(f(starting_a), f(starting_b)));
+          minY_value = min(Fp, min(f(starting_a), f(starting_b)));
 
           midX_value = median([p, starting_a, starting_b]);
-          midY_value = median([f(p), f(starting_a), f(starting_b)]);
+          midY_value = median([Fp, f(starting_a), f(starting_b)]);
 
           ydist = abs(maxY_value - minY_value);
           xdist = abs(maxX_value - minX_value);
@@ -137,29 +133,30 @@ function output = fn_bisection_method(a, b, f, TOL, N)
           xlim([xm-axisBorder, xm+axisBorder]);
           ylim([ym-axisBorder, ym+axisBorder]);
 
-      legend({function_str, 'a', 'b', 'final approximation p_n','midpoints'}, 'Location', 'northwest');
+      legend({function_str, 'a', 'b', 'final approximation p_n','ps'}, 'Location', 'northwest');
       hold off;
       return;
     endif
 
-
+    ## STEP 6
     ##solve for a[i], b[i];
-    if ((f(a).*f(midpoint))>0) #p replaces a; same sign
-      a = midpoint;
-      Fa = f(midpoint);
+    if ((f(a)*Fp)>0) #p replaces a; same sign
+      a = p;
+      Fa = Fp;
     else
-      b = midpoint;
-      Fb = f(midpoint);
+      b = p;
+      Fb = Fp;
     endif
-    past_midpoint = midpoint;
 
-    ##PLOT the midpoint
-    #scatter(midpoint, f(midpoint), 5, 'b', 'filled');
-    #text(midpoint, f(midpoint), ['p' n_str],"fontsize",15);
+
+    past_p = p;
+
+    ##PLOT the p
+    #scatter(p, Fp, 5, 'b', 'filled');
+    #text(p, Fp, ['p' n_str],"fontsize",15);
   endfor
 
-
-  # plot the midpoints
+          # plot the ps
           #for(i=1:N)
               #scatter(bisection_result(i, 6), bisection_result(i,7), 5, 'b', 'filled');
           #endfor
@@ -180,8 +177,9 @@ function output = fn_bisection_method(a, b, f, TOL, N)
           # Set x-axis limits as "ZOOM"
           xlim([xm-axisBorder, xm+axisBorder]);
           ylim([ym-axisBorder, ym+axisBorder]);
-      #legend({function_str, 'a', 'b', 'final approximation p_n','midpoints'}, 'Location', 'northwest');
-  hold off;
-  fprintf('error. Method failed after %d iterations, TOL:%f,\t last midpoint: %f\n',N, TOL, midpoint);
 
+  hold off;
+
+  ## STEP 7
+  fprintf('error. Method failed after %d iterations, TOL:%f,\t last p: %f\n',N, TOL, p);
 end

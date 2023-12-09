@@ -17,7 +17,7 @@ p0 = -1.5028089; ## works
 p0 = 0.72593063; ## works
 p0 = 1.93834595; ## works
 
-p0 = 0.6180339887478; #works
+p0 = 0.6180339887478; #works    ## fixed point already
 p0= 2.000001; #fails
 
 fixed_point = fn_fixed_point_iteration(g, p0, 1e-10, 15);

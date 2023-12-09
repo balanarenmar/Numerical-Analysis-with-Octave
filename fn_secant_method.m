@@ -58,11 +58,13 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
   OG_p1 = p1;
 
   ## STEP 1,2,5
+  q0 = f(p0);
+  q1 = f(p1);
   for i = 2:N
 
     ## STEP 3
     p = p1 - q1*(p1 - p0)/(q1 - q0);  # Compute p's of i
-    #fprintf(' p%d = %.7f \n', i, p );
+
     fprintf(' p%d = %.7f\t\tf(p%d) = %.7f\tp%d = %.7f\t\tf(p%d) = %.7f\tp%d = %.7f\t\tf(p%d) = %.8f\n',i-2,p0,i-2,f(p0), i-1,p1, i-1,f(p1), i,p, i,f(p));
 
     %STORE data
@@ -79,6 +81,7 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
       #scatter(p, f(p), 10, 'b', 'filled');
 
     ## Check for convergence
+    abs_error = fn_abs_err(p, p0);
     rel_error = fn_rel_err(p0, p);
 
     ## STEP 4
@@ -128,5 +131,7 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
 
   endfor
   hold off;
+
+  ## STEP 7
   error('Method failed after %d iterations, last value: %f',N, p);
 end

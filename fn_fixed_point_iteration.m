@@ -31,18 +31,14 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
   % Calculate the range for both x and y
   x_range = b - a;
   y_range = y_max - y_min;
-
   % Determine the maximum range for the aspect ratio
   max_range = max(x_range, y_range);
-
   % Calculate the new axis limits
   x_center = (b + a) / 2;
   y_center = (y_max + y_min) / 2;
   x_limit = [x_center - max_range / 2, x_center + max_range / 2];
   y_limit = [y_center - max_range / 2, y_center + max_range / 2];
-  % Set the aspect ratio to 'equal' and specify axis limits and tick locations
-  #axis([x_limit, y_limit]);
-
+  % Set the aspect ratio to equal
   axis equal;
   hold on;
 
@@ -69,48 +65,49 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
   fprintf('Fixed point iteration of f(x) = %s \n',function_str);
   fprintf('n\tp\t\tf(p)\t\ta_error\t\n');
   init_aprox = p0;
+
   ## Fixed Point Iteration LOOP
+  ## STEP 1, 2, & 5
   for i = 1:N
     n_str = num2str(i);
-    py = f(px);
+    ## STEP 3
+    p = f(p0);
 
     #Store data
     new_row = zeros(1,3);
     new_row(1,1) = i;
-    new_row(1,2) = px;
-    new_row(1,3) = py;
+    new_row(1,2) = p0;
+    new_row(1,3) = p;
     fixedpoint_result = vertcat(fixedpoint_result, new_row);
     fixedpoint_result_cell = [column_labels; num2cell(fixedpoint_result)];
     assignin('base', 'fixedpoint_result', fixedpoint_result_cell);
 
     ##STOPPING CONDITION
-    abs_error = fn_abs_err(px, py);
-    #rel_error = fn_rel_err(px, py);
+    abs_error = fn_abs_err(p0, p);
+    #rel_error = fn_rel_err(p0, p);
 
-    #fprintf('%d\t%.10f\t%.10f\t%.11f\t%.11f \n',i,px,py,abs_error,rel_error);
-    fprintf('%d\t%.10f\t%.10f\t%.11f \n',i,px,py,abs_error); ## no rel_error
+    fprintf('%d\t%.10f\t%.10f\t%.11f \n',i,p0,p,abs_error); ## no rel_error
     if (abs_error < TOL)
-      output = py;
-      fprintf('\nFIXED POINT REACHED at x=%f at iteration %d, from p0=%f\n',px,i,init_aprox);
-      #plot(px, py, 'k*');
-      scatter(px, py, 20, 'g', 'filled');
-
+      output = p;
+      fprintf('\nFIXED POINT REACHED at x=%f at iteration %d, from p0=%f\n',p0,i,init_aprox);
+      #plot(p0, p, 'k*');
+      scatter(p0, p, 20, 'g', 'filled');
 
       fixedpoint_result_cell = [column_labels; num2cell(fixedpoint_result)];
 
-      xdist=abs(p0-px);        # distance from initial approx to fixed point
-      ydist=abs(f(p0)-f(px));
+      xdist=abs(p0-p0);        # distance from initial approx to fixed point
+      ydist=abs(f(p0)-f(p0));
       maxDist = max(xdist, ydist);
       axisBorder = 1.5 * maxDist;   ## Makes plot axis 3x of maxDist
-      xm = (p0 + px) / 2;      # Calculate the midpoint
-      ym = (f(p0) + py) / 2;
+      xm = (p0 + p0) / 2;      # Calculate the midpoint
+      ym = (f(p0) + p) / 2;
 
       ## MAKE CASE IF P0 is exactly a FIXED POINT
       if (xdist == 0)
         xlim([a, b]);
         ylim([a, b]);
       else
-        text(px, py, [' p_{', n_str, '}=' num2str(px)],"fontsize",15, 'Color','k', 'FontSize', 15);
+        text(p0, p, [' p_{', n_str, '}=' num2str(p0)],"fontsize",15, 'Color','k', 'FontSize', 15);
         xlim([xm-axisBorder, xm+axisBorder]);  # Set x-axis limits
         ylim([ym-axisBorder, ym+axisBorder]);
       end
@@ -125,22 +122,25 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
     endif
 
     ## mark the current approximation as a dot
-    #scatter(px, py, 5, 'b', 'filled');
-    #text(px, py, ['p' n_str],"fontsize",15);
+    #scatter(p0, p, 5, 'b', 'filled');
+    #text(p0, p, ['p' n_str],"fontsize",15);
 
-    ##UPDATE VALUES
-    px = py;
+    ## UPDATE VALUES
+    ## STEP 6
+    p0 = p;
 
 endfor
 
   #if not found
-  text(px, f(px), [' px=' num2str(px)],"fontsize",15);
+  text(init_aprox, f(init_aprox), [' px=' num2str(init_aprox)],"fontsize",15);
 
   #zoom the plot, centered on p0
-  xlim([p0-15, p0+15]);  % Set x-axis limits
-  ylim([f(p0)-15, f(p0)+15]);
-  output = py;
+  xlim([init_aprox-15, init_aprox+15]);  % Set x-axis limits
+  ylim([f(init_aprox)-15, f(init_aprox)+15]);
+  output = p;
   hold off;
-  fprintf('error. Method failed after %d iterations, p0=%f. last value: %f\t\n',N,init_aprox, py);
+
+  ## STEP 7
+  fprintf('error. Method failed after %d iterations, p0=%f. last value: %f\t\n',N,init_aprox, p);
 
 end

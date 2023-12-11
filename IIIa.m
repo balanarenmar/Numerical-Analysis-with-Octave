@@ -6,5 +6,5 @@
 #}
 
 f = @(x) exp(x)*1 + exp(-x)*1 - 5 - x;
-p0 = 2;
+p0 = 1.5;
 fn_newtons_method(f, p0, 1e-8, 50);

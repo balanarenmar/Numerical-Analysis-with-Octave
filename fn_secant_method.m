@@ -85,7 +85,7 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
     rel_error = fn_rel_err(p0, p);
 
     ## STEP 4
-    if (rel_error < TOL)
+    if (abs_error < TOL)
         fprintf('\nConverged to solution: p%d = %.8f using Secant Method.\n\n',i, p);
         scatter(p, f(p), 20, 'g', 'filled');
         text(p, f(p), [' p_{' num2str(i) '}'],"fontsize",20);

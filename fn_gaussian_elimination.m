@@ -25,8 +25,9 @@ function x = fn_gaussian_elimination(A)
       ## STEP 2
       p = find(col, 1);  ## find index of first non-zero value in col i
       if isempty(p)
-        fprintf('No unique solution exists.\n');
-        error('no unique solutions.');
+        fprintf('No unique solution exists. pivot not found\n');
+        A;
+        #error('no unique solutions.');
         unique_solution = false;
         return;
       endif
@@ -48,12 +49,13 @@ function x = fn_gaussian_elimination(A)
         Ej = A(j, :) - (mji.*A(i, :));
         A(j, :) = Ej;
       endfor
-
+  A
   endfor
 
     ## STEP 7
     if (A(n,n) == 0)
-      fprintf('No unique solution exists.\n');
+      fprintf('No unique solution exists. last row is all 0\n');
+      disp(A);
       error('no unique solutions.');
       unique_solution = false;
       return;

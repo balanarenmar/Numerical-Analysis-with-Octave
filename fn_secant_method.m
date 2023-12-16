@@ -81,8 +81,8 @@ function output = fn_secant_method(f, p0, p1, TOL, N)
       #scatter(p, f(p), 10, 'b', 'filled');
 
     ## Check for convergence
-    abs_error = fn_abs_err(p, p0);
     rel_error = fn_rel_err(p0, p);
+    abs_error = fn_abs_err(p, p0);
 
     ## STEP 4
     if (abs_error < TOL)

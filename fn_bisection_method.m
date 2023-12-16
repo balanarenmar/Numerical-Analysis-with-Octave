@@ -92,7 +92,7 @@ function output = fn_bisection_method(a, b, f, TOL, N)
     rel_error = fn_rel_err(p, past_p);
     abs_error = fn_abs_err(p, past_p);
 
-    fprintf('%d\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f \n',i,a,f(a),b,f(b),p,Fp,abs_error,rel_error);
+    fprintf('%d\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\t%-.6f \n',i,a,f(a),b,f(b),p,Fp,abs_error);
     ## STOPPING CONDITION
     ## STEP 4
     if (Fp==0) || (abs_error < TOL)

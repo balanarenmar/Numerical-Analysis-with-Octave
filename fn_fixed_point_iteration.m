@@ -95,12 +95,12 @@ function output = fn_fixed_point_iteration(f, p0, TOL, N)
 
       fixedpoint_result_cell = [column_labels; num2cell(fixedpoint_result)];
 
-      xdist=abs(p0-p0);        # distance from initial approx to fixed point
-      ydist=abs(f(p0)-f(p0));
+      xdist=abs(init_aprox-p0);        # distance from initial approx to fixed point
+      ydist=abs(f(init_aprox)-f(p0));
       maxDist = max(xdist, ydist);
       axisBorder = 1.5 * maxDist;   ## Makes plot axis 3x of maxDist
-      xm = (p0 + p0) / 2;      # Calculate the midpoint
-      ym = (f(p0) + p) / 2;
+      xm = (init_aprox + p0) / 2;      # Calculate the midpoint
+      ym = (f(init_aprox) + p) / 2;
 
       ## MAKE CASE IF P0 is exactly a FIXED POINT
       if (xdist == 0)

@@ -8,7 +8,7 @@
 g = @(x) x.^[x - cos(x)];
 
 # initial guess: p0
-p0 = 5;
+p0 = 0.99;
 
 fn_fixed_point_iteration(g, p0, 1e-8, 100);
 
